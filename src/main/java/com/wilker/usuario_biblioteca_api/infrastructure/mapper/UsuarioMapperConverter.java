@@ -12,6 +12,5 @@ public interface UsuarioMapperConverter {
     @Mapping(target = "id", ignore = true)
     UsuarioEntity paraUsuarioEntity(UsuarioRequestDTO usuarioRequestDTO);
 
-    @Mapping(target = "senha", ignore = true)
     UsuarioResponseDTO paraUsuarioResponseDTO(UsuarioEntity usuarioEntity);
 }
