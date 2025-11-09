@@ -42,12 +42,21 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Desabilita a proteção CSRF, ideal para APIs RESTful stateless.
                 .authorizeHttpRequests(authorize -> authorize
+
+                        // Rotas que só o ADMIN pode acessar
+                        .requestMatchers(HttpMethod.GET, "/usuario/todos").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/usuario/todos").hasRole("ADMIN")
+
                         // Permite acesso irrestrito (público) para o endpoint de registro de novo usuário.
                         .requestMatchers(HttpMethod.POST, "/usuario/registrar").permitAll()
+
                         // Permite acesso irrestrito (público) para o endpoint de login (autenticação).
                         .requestMatchers(HttpMethod.POST, "/usuario/login").permitAll()
+
                         // Exige que todas as outras requisições para caminhos /usuario/** estejam autenticadas.
                         .requestMatchers("/usuario/**").authenticated()
+
+
                         // Exige autenticação para qualquer outra requisição não mapeada acima.
                         .anyRequest().authenticated()
                 )

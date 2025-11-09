@@ -32,6 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return org.springframework.security.core.userdetails.User
                 .withUsername(usuarioEntity.getEmail()) // Define o identificador principal (o e-mail).
                 .password(usuarioEntity.getSenha()) // Define a senha (que será comparada com a senha criptografada fornecida no login).
+                .authorities(usuarioEntity.getAuthorities()) //Define as permissões do usuario
                 .build(); // Constrói o objeto final que contém as informações de autenticação (o Authority está vazio neste caso).
     }
 }
