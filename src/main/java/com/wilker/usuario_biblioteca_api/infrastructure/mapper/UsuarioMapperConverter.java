@@ -6,6 +6,8 @@ import com.wilker.usuario_biblioteca_api.infrastructure.entity.UsuarioEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface UsuarioMapperConverter {
 
@@ -13,4 +15,6 @@ public interface UsuarioMapperConverter {
     UsuarioEntity paraUsuarioEntity(UsuarioRequestDTO usuarioRequestDTO);
 
     UsuarioResponseDTO paraUsuarioResponseDTO(UsuarioEntity usuarioEntity);
+
+    List<UsuarioResponseDTO> paraUsuarioResponseDTOList(List<UsuarioEntity> usuarioEntityList);
 }

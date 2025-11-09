@@ -7,6 +7,7 @@ import com.wilker.usuario_biblioteca_api.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuario")
@@ -25,13 +26,13 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.autenticaUsuario(loginRequestDTO));
     }
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<UsuarioResponseDTO> buscaDadosUsuario (@RequestParam ("email") String email ){
         return ResponseEntity.ok(usuarioService.buscaUsuarioPeloEmail(email));
     }
 
     @PutMapping("/{email}")
-    public ResponseEntity<UsuarioResponseDTO> atualizaDadosUusario(@RequestBody UsuarioRequestDTO usuarioRequestDTO,
+    public ResponseEntity<UsuarioResponseDTO> atualizaDadosUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO,
                                                                    @PathVariable String email){
         return ResponseEntity.ok(usuarioService.atualizaUsuario(usuarioRequestDTO, email));
     }
@@ -40,6 +41,11 @@ public class UsuarioController {
     public ResponseEntity<Void> deletaDadosUsuario(@PathVariable String email){
         usuarioService.deletaUsuario(email);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/todos")
+    public ResponseEntity<List<UsuarioResponseDTO>> buscaTodosUsuarios(){
+        return ResponseEntity.ok(usuarioService.buscaTodosUsuarios());
     }
 
 }
