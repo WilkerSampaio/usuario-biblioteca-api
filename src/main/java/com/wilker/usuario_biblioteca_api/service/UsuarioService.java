@@ -20,6 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
@@ -88,6 +90,17 @@ public class UsuarioService {
 
     public void deletaUsuario(String email){
         usuarioRepository.deleteByEmail(email);
+    }
+
+    public List<UsuarioResponseDTO> buscaTodosUsuarios(){
+
+        List<UsuarioEntity> usuarioEntityList = usuarioRepository.findAll();
+
+        if(usuarioEntityList.isEmpty()){
+            throw new ResourceNotFoundException("Nenhum usuário foi encontrado");
+        }
+
+        return usuarioMapperConverter.paraUsuarioResponseDTOList(usuarioEntityList);
     }
 
 }
