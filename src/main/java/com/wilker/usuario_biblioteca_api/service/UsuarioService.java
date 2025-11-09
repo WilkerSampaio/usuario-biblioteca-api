@@ -7,6 +7,7 @@ import com.wilker.usuario_biblioteca_api.infrastructure.entity.UsuarioEntity;
 import com.wilker.usuario_biblioteca_api.infrastructure.exception.ConflictException;
 import com.wilker.usuario_biblioteca_api.infrastructure.exception.ResourceNotFoundException;
 import com.wilker.usuario_biblioteca_api.infrastructure.mapper.UsuarioMapperConverter;
+import com.wilker.usuario_biblioteca_api.infrastructure.mapper.UsuarioMapperUpdate;
 import com.wilker.usuario_biblioteca_api.infrastructure.repository.UsuarioRepository;
 import com.wilker.usuario_biblioteca_api.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class UsuarioService {
     private final PasswordEncoder passwordEncoder;
     private final UsuarioMapperConverter usuarioMapperConverter;
     private final JwtUtil jwtUtil;
+    private final UsuarioMapperUpdate usuarioMapperUpdate;
 
     public UsuarioResponseDTO registraUsuario(UsuarioRequestDTO usuarioRequestDTO){
 
@@ -72,6 +74,16 @@ public class UsuarioService {
 
         return usuarioMapperConverter.paraUsuarioResponseDTO(usuarioEntity);
 
+    }
+
+    public UsuarioResponseDTO atualizaUsuario (UsuarioRequestDTO usuarioRequestDTO, String email){
+
+        UsuarioEntity usuarioEntity = usuarioRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("Email não encontrado"));
+
+        usuarioMapperUpdate.updateUsuario(usuarioRequestDTO, usuarioEntity);
+
+        return usuarioMapperConverter.paraUsuarioResponseDTO(usuarioEntity);
     }
 
 }
