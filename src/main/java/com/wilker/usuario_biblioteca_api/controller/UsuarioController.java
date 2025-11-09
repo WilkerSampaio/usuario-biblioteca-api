@@ -29,4 +29,12 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponseDTO> buscaDadosUsuario (@RequestParam ("email") String email ){
         return ResponseEntity.ok(usuarioService.buscaUsuarioPeloEmail(email));
     }
+
+    @PutMapping("/{email}")
+    public ResponseEntity<UsuarioResponseDTO> atualizaDadosUusario(@RequestBody UsuarioRequestDTO usuarioRequestDTO,
+                                                                   @PathVariable String email){
+        return ResponseEntity.ok(usuarioService.atualizaUsuario(usuarioRequestDTO, email));
+    }
+
+
 }
