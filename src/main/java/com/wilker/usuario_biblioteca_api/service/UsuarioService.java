@@ -83,7 +83,11 @@ public class UsuarioService {
 
         usuarioMapperUpdate.updateUsuario(usuarioRequestDTO, usuarioEntity);
 
-        return usuarioMapperConverter.paraUsuarioResponseDTO(usuarioEntity);
+        return usuarioMapperConverter.paraUsuarioResponseDTO(usuarioRepository.save(usuarioEntity));
+    }
+
+    public void deletaUsuario(String email){
+        usuarioRepository.deleteByEmail(email);
     }
 
 }

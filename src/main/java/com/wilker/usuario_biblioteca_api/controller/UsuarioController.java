@@ -36,5 +36,10 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.atualizaUsuario(usuarioRequestDTO, email));
     }
 
+    @DeleteMapping("/{email}")
+    public ResponseEntity<Void> deletaDadosUsuario(@PathVariable String email){
+        usuarioService.deletaUsuario(email);
+        return ResponseEntity.ok().build();
+    }
 
 }
