@@ -103,4 +103,12 @@ public class UsuarioService {
         return usuarioMapperConverter.paraUsuarioResponseDTOList(usuarioEntityList);
     }
 
+    public void deletaTodosUsuarios() {
+        List<UsuarioEntity> usuarioEntityList = usuarioRepository.findAll();
+
+        if (usuarioEntityList.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhum usuário cadastrado");
+        }
+            usuarioRepository.deleteAll();
+    }
 }

@@ -48,4 +48,11 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.buscaTodosUsuarios());
     }
 
+    @DeleteMapping("/todos")
+    public ResponseEntity<Void> deletaTodosUsuarios(){
+        usuarioService.deletaTodosUsuarios();
+
+        return ResponseEntity.ok().build();
+    }
+
 }
