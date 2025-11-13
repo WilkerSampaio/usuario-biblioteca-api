@@ -74,14 +74,18 @@ public class UsuarioService {
     }
 
     // Busca usuário pelo email
-    public UsuarioResponseDTO buscaUsuarioPeloEmail(String email) {
+    public UsuarioResponseDTO buscaUsuarioPeloEmail(String token) {
+        String email = jwtUtil.extractUsername(token.substring(7));
+
         UsuarioEntity usuarioEntity = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Email não encontrado"));
         return usuarioMapperConverter.paraUsuarioResponseDTO(usuarioEntity);
     }
 
     // Atualiza usuário
-    public UsuarioResponseDTO atualizaUsuario(UsuarioRequestDTO usuarioRequestDTO, String email) {
+    public UsuarioResponseDTO atualizaUsuario(UsuarioRequestDTO usuarioRequestDTO, String token) {
+        String email = jwtUtil.extractUsername(token.substring(7));
+
         UsuarioEntity usuarioEntity = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Email não encontrado"));
 

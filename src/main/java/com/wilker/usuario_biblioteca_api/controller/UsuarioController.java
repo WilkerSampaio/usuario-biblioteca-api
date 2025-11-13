@@ -27,14 +27,14 @@ public class UsuarioController {
     }
 
     @GetMapping()
-    public ResponseEntity<UsuarioResponseDTO> buscaDadosUsuario (@RequestParam ("email") String email ){
-        return ResponseEntity.ok(usuarioService.buscaUsuarioPeloEmail(email));
+    public ResponseEntity<UsuarioResponseDTO> buscaDadosUsuario (@RequestHeader("Authorization") String token ){
+        return ResponseEntity.ok(usuarioService.buscaUsuarioPeloEmail(token));
     }
 
     @PutMapping("/{email}")
     public ResponseEntity<UsuarioResponseDTO> atualizaDadosUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO,
-                                                                   @PathVariable String email){
-        return ResponseEntity.ok(usuarioService.atualizaUsuario(usuarioRequestDTO, email));
+                                                                   @RequestHeader("Authorization") String token){
+        return ResponseEntity.ok(usuarioService.atualizaUsuario(usuarioRequestDTO, token));
     }
 
     @DeleteMapping("/{email}")
