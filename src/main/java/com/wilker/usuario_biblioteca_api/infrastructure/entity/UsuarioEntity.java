@@ -37,12 +37,15 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "senha")
     private String senha;
 
+    @ElementCollection(fetch = FetchType.EAGER) // Cria uma tabela auxiliar, pois RoleEnum não é uma entidade
     @Enumerated(EnumType.STRING)
-    private RoleEnum roleEnum;
+    private List<RoleEnum> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + roleEnum.name()));
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+                .toList();
     }
 
     @Override
