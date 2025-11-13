@@ -53,6 +53,7 @@ public class SecurityConfig {
                         // Permite acesso irrestrito (público) para o endpoint de login (autenticação).
                         .requestMatchers(HttpMethod.POST, "/usuario/login").permitAll()
 
+
                         // Exige que todas as outras requisições para caminhos /usuario/** estejam autenticadas.
                         .requestMatchers("/usuario/**").authenticated()
 
