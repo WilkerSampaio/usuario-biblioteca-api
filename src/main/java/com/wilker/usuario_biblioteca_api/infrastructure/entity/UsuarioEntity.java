@@ -19,6 +19,7 @@ import java.util.List;
 @Table(name = "usuario")
 @Entity
 @Builder
+@Data
 
 public class UsuarioEntity implements UserDetails {
 
