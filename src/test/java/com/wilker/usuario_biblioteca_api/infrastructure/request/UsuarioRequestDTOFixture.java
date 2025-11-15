@@ -7,13 +7,12 @@ import java.util.List;
 
 public class UsuarioRequestDTOFixture {
 
-    public UsuarioRequestDTO build (
+    public static UsuarioRequestDTO build (
             String nome, String email,
             String senha,
             List<RoleEnum> roles){
 
         return new UsuarioRequestDTO(nome, email, senha, roles);
     }
-
 
 }

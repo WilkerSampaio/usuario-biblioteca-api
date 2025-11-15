@@ -2,10 +2,7 @@ package com.wilker.usuario_biblioteca_api.infrastructure.entity;
 
 import com.wilker.usuario_biblioteca_api.infrastructure.enums.RoleEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "usuario")
 @Entity
+@Builder
 
 public class UsuarioEntity implements UserDetails {
 

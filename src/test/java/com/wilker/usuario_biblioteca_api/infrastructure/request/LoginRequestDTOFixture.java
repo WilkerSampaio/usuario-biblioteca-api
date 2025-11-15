@@ -4,7 +4,7 @@ import com.wilker.usuario_biblioteca_api.infrastructure.dto.request.LoginRequest
 
 public class LoginRequestDTOFixture {
 
-    public LoginRequestDTO build(String email, String senha){
+    public static LoginRequestDTO build(String email, String senha){
         return new LoginRequestDTO(email, senha);
 
     }
