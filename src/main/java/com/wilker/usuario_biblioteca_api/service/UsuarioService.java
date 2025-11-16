@@ -32,7 +32,6 @@ public class UsuarioService {
     private final JwtUtil jwtUtil;
     private final UsuarioMapperUpdate usuarioMapperUpdate;
 
-    // Registro de usuário
     public UsuarioResponseDTO registraUsuario(UsuarioRequestDTO usuarioRequestDTO) {
         casoEmailExiste(usuarioRequestDTO.email());
 
@@ -45,7 +44,6 @@ public class UsuarioService {
         return usuarioMapperConverter.paraUsuarioResponseDTO(usuarioRepository.save(usuarioEntity));
     }
 
-    // Verifica se email já existe
     public boolean verificaSeExisteEmail(String email) {
         return usuarioRepository.existsByEmail(email);
     }
@@ -56,13 +54,11 @@ public class UsuarioService {
         }
     }
 
-    // Autenticação de usuário
     public String autenticaUsuario(LoginRequestDTO loginRequestDTO) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequestDTO.email(), loginRequestDTO.senha()));
 
-            // Busca o usuário completo para gerar token com roles
             UsuarioEntity usuarioEntity = usuarioRepository.findByEmail(loginRequestDTO.email())
                     .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
@@ -73,35 +69,25 @@ public class UsuarioService {
         }
     }
 
-    // Busca usuário pelo email
     public UsuarioResponseDTO buscaUsuarioPeloEmail(String token) {
-        String email = jwtUtil.extractUsername(token.substring(7));
-
-        UsuarioEntity usuarioEntity = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Email não encontrado"));
+        UsuarioEntity usuarioEntity = getUsuarioByToken(token);
         return usuarioMapperConverter.paraUsuarioResponseDTO(usuarioEntity);
     }
 
-    // Atualiza usuário
     public UsuarioResponseDTO atualizaUsuario(UsuarioRequestDTO usuarioRequestDTO, String token) {
-        String email = jwtUtil.extractUsername(token.substring(7));
-
-        UsuarioEntity usuarioEntity = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Email não encontrado"));
+        UsuarioEntity usuarioEntity = getUsuarioByToken(token);
 
         usuarioMapperUpdate.updateUsuario(usuarioRequestDTO, usuarioEntity);
 
         return usuarioMapperConverter.paraUsuarioResponseDTO(usuarioRepository.save(usuarioEntity));
     }
 
-    // Deleta usuário pelo próprio email
-    public void deletaUsuario(String email) {
-        UsuarioEntity usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Email não encontrado"));
-        usuarioRepository.delete(usuario);
+    public void deletaUsuario(String token) {
+        UsuarioEntity usuarioEntity = getUsuarioByToken(token);
+
+        usuarioRepository.delete(usuarioEntity);
     }
 
-    // Lista todos usuários (ADMIN)
     public List<UsuarioResponseDTO> buscaTodosUsuarios() {
         List<UsuarioEntity> usuarioEntityList = usuarioRepository.findAll();
         if (usuarioEntityList.isEmpty()) {
@@ -110,7 +96,6 @@ public class UsuarioService {
         return usuarioMapperConverter.paraUsuarioResponseDTOList(usuarioEntityList);
     }
 
-    // Deleta todos usuários (ADMIN)
     public void deletaTodosUsuarios() {
         List<UsuarioEntity> usuarioEntityList = usuarioRepository.findAll();
         if (usuarioEntityList.isEmpty()) {
@@ -118,4 +103,12 @@ public class UsuarioService {
         }
         usuarioRepository.deleteAll();
     }
+
+    private UsuarioEntity getUsuarioByToken(String token){
+        String email = jwtUtil.extractUsername(token.substring(7));
+
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Email não encontrado"));
+    }
+
 }
