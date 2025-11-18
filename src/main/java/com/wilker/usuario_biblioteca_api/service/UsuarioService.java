@@ -39,7 +39,7 @@ public class UsuarioService {
         usuarioEntity.setNome(usuarioRequestDTO.nome());
         usuarioEntity.setEmail(usuarioRequestDTO.email());
         usuarioEntity.setSenha(passwordEncoder.encode(usuarioRequestDTO.senha()));
-        usuarioEntity.setRoles(List.of(RoleEnum.USER)); // Corrigido para lista
+        usuarioEntity.setRoles(List.of(RoleEnum.USER));
 
         return usuarioMapperConverter.paraUsuarioResponseDTO(usuarioRepository.save(usuarioEntity));
     }
