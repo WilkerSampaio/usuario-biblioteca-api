@@ -64,8 +64,8 @@ public class UsuarioService {
 
             return "Bearer " + jwtUtil.generateToken(usuarioEntity);
 
-        } catch (BadCredentialsException | UsernameNotFoundException e) {
-            throw new UsernameNotFoundException("Credenciais inválidas. Verifique seu email e senha", e.getCause());
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Credenciais inválidas. Verifique seu email e senha", e.getCause());
         }
     }
 
