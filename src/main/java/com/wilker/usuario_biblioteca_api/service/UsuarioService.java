@@ -35,11 +35,8 @@ public class UsuarioService {
     public UsuarioResponseDTO registraUsuario(UsuarioRequestDTO usuarioRequestDTO) {
         casoEmailExiste(usuarioRequestDTO.email());
 
-        UsuarioEntity usuarioEntity = new UsuarioEntity();
-        usuarioEntity.setNome(usuarioRequestDTO.nome());
-        usuarioEntity.setEmail(usuarioRequestDTO.email());
+        UsuarioEntity usuarioEntity = usuarioMapperConverter.paraUsuarioEntity(usuarioRequestDTO);
         usuarioEntity.setSenha(passwordEncoder.encode(usuarioRequestDTO.senha()));
-        usuarioEntity.setRoles(List.of(RoleEnum.USER));
 
         return usuarioMapperConverter.paraUsuarioResponseDTO(usuarioRepository.save(usuarioEntity));
     }

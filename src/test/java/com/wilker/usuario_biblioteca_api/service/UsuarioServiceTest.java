@@ -121,6 +121,7 @@ public class UsuarioServiceTest {
     @Test
     void deveRegistrarUsuarioComSucesso() {
         when(usuarioRepository.existsByEmail(anyString())).thenReturn(false);
+        when(usuarioMapperConverter.paraUsuarioEntity(usuarioRequestDTO)).thenReturn(usuarioEntity);
         when(passwordEncoder.encode(anyString())).thenReturn("senha-hash-teste");
         when(usuarioRepository.save(any(UsuarioEntity.class))).thenReturn(usuarioEntity);
         when(usuarioMapperConverter.paraUsuarioResponseDTO(usuarioEntity)).thenReturn(usuarioResponseDTO);
@@ -130,6 +131,7 @@ public class UsuarioServiceTest {
         assertEquals(usuarioResponseDTO, response);
 
         verify(usuarioRepository).existsByEmail(usuarioRequestDTO.email());
+        verify(usuarioMapperConverter).paraUsuarioEntity(usuarioRequestDTO);
         verify(passwordEncoder).encode(usuarioRequestDTO.senha());
         verify(usuarioRepository).save(any(UsuarioEntity.class));
         verify(usuarioMapperConverter).paraUsuarioResponseDTO(usuarioEntity);
