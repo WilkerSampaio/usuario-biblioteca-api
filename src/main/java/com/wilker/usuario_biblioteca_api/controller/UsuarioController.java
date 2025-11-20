@@ -31,15 +31,15 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.buscaUsuarioPeloEmail(token));
     }
 
-    @PutMapping("/{email}")
+    @PutMapping()
     public ResponseEntity<UsuarioResponseDTO> atualizaDadosUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO,
                                                                    @RequestHeader("Authorization") String token){
         return ResponseEntity.ok(usuarioService.atualizaUsuario(usuarioRequestDTO, token));
     }
 
-    @DeleteMapping("/{email}")
-    public ResponseEntity<Void> deletaDadosUsuario(@PathVariable String email){
-        usuarioService.deletaUsuario(email);
+    @DeleteMapping()
+    public ResponseEntity<Void> deletaDadosUsuario( @RequestHeader("Authorization") String token){
+        usuarioService.deletaUsuario(token);
         return ResponseEntity.ok().build();
     }
 

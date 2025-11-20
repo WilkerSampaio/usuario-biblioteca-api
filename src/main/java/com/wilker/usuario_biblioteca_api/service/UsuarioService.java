@@ -4,7 +4,6 @@ import com.wilker.usuario_biblioteca_api.infrastructure.dto.request.LoginRequest
 import com.wilker.usuario_biblioteca_api.infrastructure.dto.request.UsuarioRequestDTO;
 import com.wilker.usuario_biblioteca_api.infrastructure.dto.response.UsuarioResponseDTO;
 import com.wilker.usuario_biblioteca_api.infrastructure.entity.UsuarioEntity;
-import com.wilker.usuario_biblioteca_api.infrastructure.enums.RoleEnum;
 import com.wilker.usuario_biblioteca_api.infrastructure.exception.ConflictException;
 import com.wilker.usuario_biblioteca_api.infrastructure.exception.ResourceNotFoundException;
 import com.wilker.usuario_biblioteca_api.infrastructure.mapper.UsuarioMapperConverter;
@@ -62,7 +61,7 @@ public class UsuarioService {
             return "Bearer " + jwtUtil.generateToken(usuarioEntity);
 
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Credenciais inválidas. Verifique seu email e senha", e.getCause());
+            throw new BadCredentialsException("Credenciais inválidas. Verifique seu email e senha", e);
         }
     }
 
@@ -81,7 +80,6 @@ public class UsuarioService {
 
     public void deletaUsuario(String token) {
         UsuarioEntity usuarioEntity = getUsuarioByToken(token);
-
         usuarioRepository.delete(usuarioEntity);
     }
 
