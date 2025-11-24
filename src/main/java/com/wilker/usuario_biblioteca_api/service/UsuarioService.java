@@ -4,7 +4,6 @@ import com.wilker.usuario_biblioteca_api.infrastructure.dto.request.LoginRequest
 import com.wilker.usuario_biblioteca_api.infrastructure.dto.request.UsuarioRequestDTO;
 import com.wilker.usuario_biblioteca_api.infrastructure.dto.response.UsuarioResponseDTO;
 import com.wilker.usuario_biblioteca_api.infrastructure.entity.UsuarioEntity;
-import com.wilker.usuario_biblioteca_api.infrastructure.enums.RoleEnum;
 import com.wilker.usuario_biblioteca_api.infrastructure.exception.ConflictException;
 import com.wilker.usuario_biblioteca_api.infrastructure.exception.ResourceNotFoundException;
 import com.wilker.usuario_biblioteca_api.infrastructure.mapper.UsuarioMapperConverter;
@@ -35,11 +34,8 @@ public class UsuarioService {
     public UsuarioResponseDTO registraUsuario(UsuarioRequestDTO usuarioRequestDTO) {
         casoEmailExiste(usuarioRequestDTO.email());
 
-        UsuarioEntity usuarioEntity = new UsuarioEntity();
-        usuarioEntity.setNome(usuarioRequestDTO.nome());
-        usuarioEntity.setEmail(usuarioRequestDTO.email());
+        UsuarioEntity usuarioEntity = usuarioMapperConverter.paraUsuarioEntity(usuarioRequestDTO);
         usuarioEntity.setSenha(passwordEncoder.encode(usuarioRequestDTO.senha()));
-        usuarioEntity.setRoles(List.of(RoleEnum.USER)); // Corrigido para lista
 
         return usuarioMapperConverter.paraUsuarioResponseDTO(usuarioRepository.save(usuarioEntity));
     }
@@ -64,8 +60,8 @@ public class UsuarioService {
 
             return "Bearer " + jwtUtil.generateToken(usuarioEntity);
 
-        } catch (BadCredentialsException | UsernameNotFoundException e) {
-            throw new UsernameNotFoundException("Credenciais inválidas. Verifique seu email e senha", e.getCause());
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Credenciais inválidas. Verifique seu email e senha", e);
         }
     }
 
@@ -84,7 +80,6 @@ public class UsuarioService {
 
     public void deletaUsuario(String token) {
         UsuarioEntity usuarioEntity = getUsuarioByToken(token);
-
         usuarioRepository.delete(usuarioEntity);
     }
 

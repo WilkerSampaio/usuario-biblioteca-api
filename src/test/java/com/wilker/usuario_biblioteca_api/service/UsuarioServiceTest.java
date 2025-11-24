@@ -16,12 +16,11 @@ import com.wilker.usuario_biblioteca_api.infrastructure.security.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.commons.support.Resource;
-import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -69,6 +68,9 @@ public class UsuarioServiceTest {
     List<UsuarioResponseDTO> usuarioResponseDTOList;
     UsuarioResponseDTO usuarioResponseDTOAtualizado;
     UsuarioRequestDTO usuarioRequestDTOParaAtualizar;
+
+    private final String tokenPuro = "token-jwt-gerado";
+    private final String tokenCompleto = "Bearer " + tokenPuro;
 
     @BeforeEach
     void setup(){
@@ -119,6 +121,7 @@ public class UsuarioServiceTest {
     @Test
     void deveRegistrarUsuarioComSucesso() {
         when(usuarioRepository.existsByEmail(anyString())).thenReturn(false);
+        when(usuarioMapperConverter.paraUsuarioEntity(usuarioRequestDTO)).thenReturn(usuarioEntity);
         when(passwordEncoder.encode(anyString())).thenReturn("senha-hash-teste");
         when(usuarioRepository.save(any(UsuarioEntity.class))).thenReturn(usuarioEntity);
         when(usuarioMapperConverter.paraUsuarioResponseDTO(usuarioEntity)).thenReturn(usuarioResponseDTO);
@@ -128,11 +131,28 @@ public class UsuarioServiceTest {
         assertEquals(usuarioResponseDTO, response);
 
         verify(usuarioRepository).existsByEmail(usuarioRequestDTO.email());
+        verify(usuarioMapperConverter).paraUsuarioEntity(usuarioRequestDTO);
         verify(passwordEncoder).encode(usuarioRequestDTO.senha());
         verify(usuarioRepository).save(any(UsuarioEntity.class));
         verify(usuarioMapperConverter).paraUsuarioResponseDTO(usuarioEntity);
 
         verifyNoMoreInteractions(usuarioRepository, passwordEncoder, usuarioMapperConverter);
+    }
+    @Test
+    void deveLancarExcecaoCasoCredencialInvalida(){
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenThrow(new BadCredentialsException("Credenciais inválidas. Verifique seu email e senha"));
+
+        BadCredentialsException e = assertThrows(BadCredentialsException.class, ()-> usuarioService.autenticaUsuario(loginRequestDTO));
+
+        assertThat(e.getMessage(), is("Credenciais inválidas. Verifique seu email e senha"));
+
+      verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+
+      verifyNoMoreInteractions(authenticationManager);
+      verifyNoInteractions(usuarioRepository, jwtUtil);
+
+
+
     }
 
     @Test
@@ -162,8 +182,6 @@ public class UsuarioServiceTest {
 
     @Test
     void deveAutenticarUsuarioComSucesso(){
-        String tokenEsperado = "token-jwt-gerado";
-        String tokenCompletoEsperado = "Bearer " + tokenEsperado;
 
         //Mockar manualmente por que essa classe não faz parte do service
         Authentication authentication = mock(Authentication.class);
@@ -171,11 +189,11 @@ public class UsuarioServiceTest {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
         when(usuarioRepository.findByEmail(loginRequestDTO.email())).thenReturn(Optional.of(usuarioEntity));
 
-        when(jwtUtil.generateToken(usuarioEntity)).thenReturn(tokenEsperado);
+        when(jwtUtil.generateToken(usuarioEntity)).thenReturn(tokenPuro);
 
         String token = usuarioService.autenticaUsuario(loginRequestDTO);
 
-        assertEquals(tokenCompletoEsperado, token);
+        assertEquals(tokenCompleto, token);
 
         verify(authenticationManager).authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.email(), loginRequestDTO.senha()));
         verify(usuarioRepository).findByEmail(loginRequestDTO.email());
@@ -186,8 +204,6 @@ public class UsuarioServiceTest {
 
     @Test
     void deveBuscarUsuarioPeloEmailComSucesso(){
-        String tokenPuro = "teste-token";
-        String tokenCompleto = "Bearer " + tokenPuro;
         String email = usuarioResponseDTO.email();
 
         when(jwtUtil.extractUsername(tokenPuro)).thenReturn(email);
@@ -207,8 +223,6 @@ public class UsuarioServiceTest {
 
     @Test
     void deveLancarExcecaoCasoEmailNaoExiste(){
-        String tokenPuro = "teste-token";
-        String tokenCompleto = "Bearer " + tokenPuro;
         String emailInexistente = "naoExiste@gmail.com";
 
         when(jwtUtil.extractUsername(tokenPuro)).thenReturn(emailInexistente);
@@ -226,8 +240,6 @@ public class UsuarioServiceTest {
 
     @Test
     void deveAtualizarUsuarioComSucesso(){
-        String tokenPuro = "teste-token";
-        String tokenCompleto = "Bearer " + tokenPuro;
         String email = usuarioResponseDTO.email();
 
         when(jwtUtil.extractUsername(tokenPuro)).thenReturn(email);
@@ -252,8 +264,6 @@ public class UsuarioServiceTest {
 
     @Test
    void deveDeletarUsuarioPeloEmail(){
-        String tokenPuro = "teste-token";
-        String tokenCompleto = "Bearer " + tokenPuro;
         String email = usuarioResponseDTO.email();
 
         when(jwtUtil.extractUsername(tokenPuro)).thenReturn(email);
