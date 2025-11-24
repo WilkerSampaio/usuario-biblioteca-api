@@ -16,6 +16,7 @@
     import java.util.List;
 
     import static org.junit.jupiter.api.Assertions.assertEquals;
+    import static org.junit.jupiter.api.Assertions.assertSame;
 
     @ExtendWith(MockitoExtension.class)
     public class UsuarioUpdateMapperTest {
@@ -24,15 +25,7 @@
 
         UsuarioEntity usuarioEntity;
 
-        UsuarioEntity usuarioEntityAtualizado;
-
         UsuarioRequestDTO usuarioRequestDTO;
-
-        UsuarioResponseDTO usuarioResponseDTO;
-
-        List<UsuarioEntity> usuarioEntityList;
-
-        List<UsuarioResponseDTO> usuarioResponseDTOList;
 
         @BeforeEach
         void setup() {
@@ -42,10 +35,10 @@
 
             usuarioEntity = UsuarioEntity.builder()
                     .id(1L)
-                    .nome("Usuario Teste")
-                    .email("usuarioteste@gmail.com")
-                    .senha("usuario123")
-                    .roles(new ArrayList<>(List.of(roles.get(0))))
+                    .nome("Nome Antigo")
+                    .email("antigo@gmail.com")
+                    .senha("antiga123")
+                    .roles(new ArrayList<>(List.of(roles.get(1)))) // ADMIN
                     .build();
 
             usuarioRequestDTO = UsuarioRequestDTOFixture.build(
@@ -53,14 +46,6 @@
                     null,
                     null,
                     new ArrayList<>(List.of(roles.get(0))));
-
-            usuarioEntityAtualizado = UsuarioEntity.builder()
-                    .id(1L)
-                    .nome("Wilker Teste")
-                    .email("usuarioteste@gmail.com")
-                    .senha("usuario123")
-                    .roles(new ArrayList<>(List.of(roles.get(0))))
-                    .build();
         }
 
         @Test
@@ -68,7 +53,14 @@
 
             UsuarioEntity entity = usuarioMapperUpdate.updateUsuario(usuarioRequestDTO, usuarioEntity);
 
-            assertEquals(usuarioEntityAtualizado, entity);
+            assertSame(usuarioEntity, entity); //verifica se a instancia é a mesma
+
+            assertEquals("Wilker Teste", entity.getNome());
+            assertEquals("antigo@gmail.com", entity.getEmail());
+            assertEquals("antiga123", entity.getSenha());
+            assertEquals(List.of(RoleEnum.USER), entity.getRoles());
+            assertEquals(1L, entity.getId());
+
 
         }
 
