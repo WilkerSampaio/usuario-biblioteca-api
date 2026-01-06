@@ -4,6 +4,7 @@ package com.wilker.usuario_biblioteca_api.infrastructure.security;
 import com.wilker.usuario_biblioteca_api.infrastructure.entity.UsuarioEntity;
 import com.wilker.usuario_biblioteca_api.infrastructure.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,8 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
 
         // 2. Converte a entidade de domínio (UsuarioEntity) para o objeto UserDetails do Spring Security.
-        return org.springframework.security.core.userdetails.User
-                .withUsername(usuarioEntity.getEmail()) // Define o identificador principal (o e-mail).
+        return User.withUsername(usuarioEntity.getEmail()) // Define o identificador principal (o e-mail).
                 .password(usuarioEntity.getSenha()) // Define a senha (que será comparada com a senha criptografada fornecida no login).
                 .authorities(usuarioEntity.getAuthorities()) //Define as permissões do usuario
                 .build(); // Constrói o objeto final que contém as informações de autenticação (o Authority está vazio neste caso).

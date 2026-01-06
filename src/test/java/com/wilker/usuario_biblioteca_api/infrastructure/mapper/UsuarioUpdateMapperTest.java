@@ -44,8 +44,7 @@
             usuarioRequestDTO = UsuarioRequestDTOFixture.build(
                     "Wilker Teste",
                     null,
-                    null,
-                    new ArrayList<>(List.of(roles.get(0))));
+                    null);
         }
 
         @Test
@@ -58,7 +57,7 @@
             assertEquals("Wilker Teste", entity.getNome());
             assertEquals("antigo@gmail.com", entity.getEmail());
             assertEquals("antiga123", entity.getSenha());
-            assertEquals(List.of(RoleEnum.USER), entity.getRoles());
+            assertEquals(List.of(RoleEnum.ADMIN), entity.getRoles());
             assertEquals(1L, entity.getId());
 
 

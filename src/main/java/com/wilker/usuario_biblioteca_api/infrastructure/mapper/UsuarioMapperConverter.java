@@ -12,6 +12,7 @@ import java.util.List;
 public interface UsuarioMapperConverter {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "roles", ignore = true)
     UsuarioEntity paraUsuarioEntity(UsuarioRequestDTO usuarioRequestDTO);
 
     UsuarioResponseDTO paraUsuarioResponseDTO(UsuarioEntity usuarioEntity);
