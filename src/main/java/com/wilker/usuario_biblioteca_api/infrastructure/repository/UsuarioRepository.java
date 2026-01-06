@@ -3,7 +3,6 @@ package com.wilker.usuario_biblioteca_api.infrastructure.repository;
 import com.wilker.usuario_biblioteca_api.infrastructure.entity.UsuarioEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 
