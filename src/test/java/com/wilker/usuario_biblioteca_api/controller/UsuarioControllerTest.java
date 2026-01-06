@@ -66,16 +66,12 @@ public class UsuarioControllerTest {
         usuarioRequestDTO = UsuarioRequestDTOFixture.build(
                 "Usuario Teste",
                 "usuarioteste@gmail.com",
-                "usuario123",
-                List.of(roles.get(0))
-        );
+                "usuario123");
 
         usuarioRequestDTOParaAtualizar = UsuarioRequestDTOFixture.build(
                 "Wilker Teste",
                 null,
-                null,
-                new ArrayList<>(List.of(roles.get(0)))
-        );
+                null);
 
         usuarioResponseDTO = UsuarioResponseDTOFixture.build(
                 1L,

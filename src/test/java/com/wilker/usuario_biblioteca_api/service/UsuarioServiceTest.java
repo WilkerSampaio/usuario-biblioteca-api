@@ -87,8 +87,7 @@ public class UsuarioServiceTest {
         usuarioRequestDTO = UsuarioRequestDTOFixture.build(
                 "Usuario Teste",
                 "usuarioteste@gmail.com",
-                "usuario123",
-                List.of(roles.get(0)));
+                "usuario123");
 
 
         usuarioResponseDTO = UsuarioResponseDTOFixture.build(
@@ -105,8 +104,7 @@ public class UsuarioServiceTest {
         usuarioRequestDTOParaAtualizar = UsuarioRequestDTOFixture.build(
                 "Wilker Teste",
                 null,
-                null,
-                new ArrayList<>(List.of(roles.get(0))));
+                null);
 
         usuarioResponseDTOAtualizado = UsuarioResponseDTOFixture.build(
                 1L,
@@ -150,8 +148,6 @@ public class UsuarioServiceTest {
 
       verifyNoMoreInteractions(authenticationManager);
       verifyNoInteractions(usuarioRepository, jwtUtil);
-
-
 
     }
 

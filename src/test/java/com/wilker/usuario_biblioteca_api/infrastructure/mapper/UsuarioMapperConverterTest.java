@@ -46,8 +46,7 @@ public class UsuarioMapperConverterTest {
         usuarioRequestDTO = UsuarioRequestDTOFixture.build(
                 "Usuario Teste",
                 "usuarioteste@gmail.com",
-                "usuario123",
-                List.of(roles.get(0)));
+                "usuario123");
 
 
         usuarioResponseDTO = UsuarioResponseDTOFixture.build(
@@ -68,7 +67,6 @@ public class UsuarioMapperConverterTest {
         assertEquals(usuarioEntity.getNome(), entity.getNome());
         assertEquals(usuarioEntity.getSenha(), entity.getSenha());
         assertEquals(usuarioEntity.getEmail(), entity.getEmail());
-        assertEquals(usuarioEntity.getRoles(), entity.getRoles());
 
     }
 
